@@ -3,13 +3,15 @@
  * @returns { Promise<void> }
  */
 exports.up = function(knex) {
-    return knex.schema.createTable('Wallet', function(table) {
+    return knex.schema.createTable('Transaction', function(table) {
         table.uuid('id').primary().defaultTo(knex.raw('UUID()'));
-        table.string('username').notNullable();
-        table.string('email').notNullable().unique();
-        table.decimal('balance', 14, 2).defaultTo(0.00).notNullable();
+        table.string('type').notNullable();
+        table.string('reference').notNullable().unique();
+        table.decimal('amount', 14, 2).defaultTo(0.00).notNullable();
+        table.string('currency').notNullable
+        table.string('status').notNullable
         table.string('bankName');
-        table.number('accountNumber').notNullable().unique();
+        table.bigInteger('accountNumber').notNullable().unique();
         table.string('accountName');
         table.string('accountType');
         table.string('bankBranch');
@@ -20,7 +22,7 @@ exports.up = function(knex) {
         table.timestamps(true, true);
 
         table.foreign('user_id').references('id').inTable('Users').onDelete('CASCADE');
-      });
+    });
 };
 
 /**
@@ -28,5 +30,5 @@ exports.up = function(knex) {
  * @returns { Promise<void> }
  */
 exports.down = function(knex) {
-    return knex.schema.dropTable('Wallets');
+  
 };
