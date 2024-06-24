@@ -1,9 +1,9 @@
 import { Injectable} from '@nestjs/common';
 import { InjectKnex, Knex } from 'nestjs-knex';
-import { ICreateUser, IUser } from './auth.interface';
+import { ICreateUser, IUser } from './user.interface';
 
 @Injectable()
-export class AuthRepo {
+export class UserRepo {
     constructor(@InjectKnex() private readonly knex: Knex) {}
 
     async createUser(payload: ICreateUser): Promise<IUser> {

@@ -2,24 +2,25 @@ import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/co
 import { JwtService } from 'src/jwt/jwt.service';
 import { UserService } from 'src/user/user.service';
 import {bcrypt} from 'bcrypt';
-import { ICreateToken, ICreateUser } from './auth.interface';
-import { AuthRepo } from './auth.repo';
+import { ICreateToken, ICreateUser, IloginUser } from './auth.interface';
+import { UserRepo } from 'src/user/user.repo';
+import { CreateUserDto, LoginUserDto } from './auth.dto';
 
 @Injectable()
 export class AuthService {
     constructor(
         private readonly jwtService: JwtService,
-        private readonly authRepo: AuthRepo
+        private readonly userRepo: UserRepo
       ) {}
     
-    public async signup(payload: ICreateUser): Promise<any> {
-    const user = await this.authRepo.getUserByEmail(payload.email);
+    public async signup(payload: CreateUserDto): Promise<any> {
+    const user = await this.userRepo.getUserByEmail(payload.email);
     if (user) {
         throw new ConflictException('User already exists');
     }
     const {email, username, password} = payload
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newUser = await this.authRepo.createUser({
+    const newUser = await this.userRepo.createUser({
         email,
         username,
         password: hashedPassword,
@@ -27,16 +28,16 @@ export class AuthService {
     return this.login(newUser);
     }
 
-    public async signin(email: string, password: string): Promise<any> {
-    const user = await this.authRepo.getUserByEmail(email);
-    if (!user || !(await bcrypt.compare(password, user.password))) {
+    public async signin(payload: LoginUserDto): Promise<any> {
+    const user = await this.userRepo.getUserByEmail(payload.email);
+    if (!user || !(await bcrypt.compare(payload.password, user.password))) {
         throw new UnauthorizedException('Invalid credentials');
     }
     return this.login(user);
     }
 
     public async onboardProcess(userId: string, onboardData: any): Promise<any> {
-    return this.authRepo.updateUser(userId, onboardData);
+    return this.userRepo.updateUser(userId, onboardData);
     }
 
     private async login(payload: ICreateToken) {
