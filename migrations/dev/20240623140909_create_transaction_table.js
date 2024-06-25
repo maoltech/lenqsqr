@@ -19,8 +19,10 @@ exports.up = function(knex) {
         table.boolean('isActive').defaultTo(true);
         table.boolean('isDeleted').defaultTo(false);
         table.uuid('user_id').notNullable();
+        table.uuid('wallet_id').notNullable();
         table.timestamps(true, true);
 
+        table.foreign('wallet_id').references('id').inTable('wallet').onDelete('CASCADE');
         table.foreign('user_id').references('id').inTable('Users').onDelete('CASCADE');
     });
 };

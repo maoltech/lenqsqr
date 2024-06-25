@@ -9,7 +9,8 @@ exports.up = function(knex) {
         table.string('email').notNullable().unique();
         table.string('bio');
         table.string('phoneNumber').notNullable().unique();
-        table.boolean('isEmailVerified').defaultTo(false)
+        table.boolean('isEmailVerified').defaultTo(false);
+        table.boolean('isOnboarded').defaultTo(false);
         table.boolean('isPhoneVerified').defaultTo(false);
         table.boolean('isActive').defaultTo(true);
         table.boolean('isDeleted').defaultTo(false);
@@ -25,7 +26,6 @@ exports.up = function(knex) {
         table.string('password').notNullable();
         table.boolean('isAdmin').defaultTo(false);
         table.boolean('isBlocked').defaultTo(false);
-        table.boolean('isDeleted').defaultTo(false);
 
         table.timestamps(true, true);
       });

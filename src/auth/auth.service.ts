@@ -44,4 +44,10 @@ export class AuthService {
         access_token: this.jwtService.createToken(payload),
     };
     }
+
+    public async completeRegistration(userId: string){
+        return await this.userRepo.updateUser(userId, {
+            isOnboarded: true
+        })
+    }
 }

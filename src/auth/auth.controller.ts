@@ -1,31 +1,43 @@
-import { Body, Controller, Post, Put, Param, HttpCode, HttpStatus, UseFilters } from '@nestjs/common';
+import { Controller, Post, Put, HttpCode, HttpStatus, UseFilters, UseGuards, Req, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { ICreateUser, IloginUser } from '../user/user.interface';
 import { HttpErrorFilter } from '../filters/filters';
+import { AuthMiddleware } from './auth.middleware';
+import { Request, Response } from 'express';
+import { CreateUserDto, LoginUserDto } from './auth.dto';
+
 @Controller('auth')
 @UseFilters(HttpErrorFilter)
 export class AuthController {
-    constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Post('signup')
-  @HttpCode(HttpStatus.CREATED)
-  async signup(@Body() createUserDto: ICreateUser): Promise<any> {
-    return this.authService.signup(createUserDto);
+  public async signup(@Req() req: Request, @Res() res: Response): Promise<any> {
+    const createUserDto: CreateUserDto = req.body;
+    const result = await this.authService.signup(createUserDto);
+    return res.status(HttpStatus.CREATED).json(result);
   }
 
   @Post('signin')
-  @HttpCode(HttpStatus.OK)
-  async signin(@Body() loginUserDto: IloginUser): Promise<any> {
-    const { email, password } = loginUserDto;
-    return this.authService.signin(loginUserDto);
+  public async signin(@Req() req: Request, @Res() res: Response): Promise<any> {
+    const loginUserDto: LoginUserDto = req.body;
+    const result = await this.authService.signin(loginUserDto);
+    return res.status(HttpStatus.OK).json(result);
   }
 
   @Put('onboard/:id')
-  @HttpCode(HttpStatus.OK)
-  async onboardProcess(
-    @Param('id') userId: string,
-    @Body() onboardData: any,
-  ): Promise<any> {
-    return this.authService.onboardProcess(userId, onboardData);
+  @UseGuards(AuthMiddleware)
+  public async onboardProcess(@Req() req: Request, @Res() res: Response): Promise<any> {
+    const userId = req['user'].id;
+    const onboardData = req.body;
+    const result = await this.authService.onboardProcess(userId, onboardData);
+    return res.status(HttpStatus.OK).json(result);
+  }
+
+  @Post('complete-registration')
+  @UseGuards(AuthMiddleware)
+  public async completeRegistration(@Req() req: Request, @Res() res: Response): Promise<any> {
+    const userId = req['user'].id;
+    const result = await this.authService.completeRegistration(userId);
+    return res.status(HttpStatus.OK).json(result);
   }
 }
