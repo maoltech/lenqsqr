@@ -10,12 +10,12 @@ exports.up = function(knex) {
         table.decimal('amount', 14, 2).defaultTo(0.00).notNullable();
         table.string('currency').notNullable
         table.string('status').notNullable
+        table.string('description').notNullable;
+        table.string('narration');
         table.string('bankName');
-        table.bigInteger('accountNumber').notNullable().unique();
+        table.bigInteger('accountNumber')
         table.string('accountName');
         table.string('accountType');
-        table.string('bankBranch');
-        table.string('swiftCode');
         table.boolean('isActive').defaultTo(true);
         table.boolean('isDeleted').defaultTo(false);
         table.uuid('user_id').notNullable();

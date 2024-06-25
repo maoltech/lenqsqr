@@ -15,7 +15,7 @@ export interface IWalletReponse {
     email: string,
     userId: string,
     name: string,
-    accountNuber?: string,
+    accountNumber?: string,
     username?: string,
     bankName?: string,
     reference?: string,

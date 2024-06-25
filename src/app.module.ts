@@ -8,8 +8,9 @@ import { JwtService } from './jwt/jwt.service';
 import { AuthModule } from './auth/auth.module';
 import { WalletModule } from './wallet/wallet.module';
 import { FlutterwaveModule } from './flutterwave/flutterwave.module';
+import { TransactionModule } from './transaction/transaction.module';
 @Module({
-  imports: [UserModule, DbModule, AuthModule, WalletModule, FlutterwaveModule],
+  imports: [UserModule, DbModule, AuthModule, WalletModule, FlutterwaveModule, TransactionModule],
   controllers: [AppController],
   providers: [AppService, JwtService],
 })
