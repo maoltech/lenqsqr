@@ -1,7 +1,9 @@
-import { Body, Controller, Post, Put, Param, HttpCode, HttpStatus } from '@nestjs/common';
+import { Body, Controller, Post, Put, Param, HttpCode, HttpStatus, UseFilters } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { ICreateUser, IloginUser } from './auth.interface';
+import { ICreateUser, IloginUser } from '../user/user.interface';
+import { HttpErrorFilter } from '../filters/filters';
 @Controller('auth')
+@UseFilters(HttpErrorFilter)
 export class AuthController {
     constructor(private readonly authService: AuthService) {}
 

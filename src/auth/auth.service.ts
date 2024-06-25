@@ -1,8 +1,7 @@
 import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from 'src/jwt/jwt.service';
-import { UserService } from 'src/user/user.service';
 import {bcrypt} from 'bcrypt';
-import { ICreateToken, ICreateUser, IloginUser } from './auth.interface';
+import { ICreateToken} from '../user/user.interface';
 import { UserRepo } from 'src/user/user.repo';
 import { CreateUserDto, LoginUserDto } from './auth.dto';
 

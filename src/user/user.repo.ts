@@ -1,6 +1,6 @@
 import { Injectable} from '@nestjs/common';
 import { InjectKnex, Knex } from 'nestjs-knex';
-import { ICreateUser, IUser } from './user.interface';
+import { ICreateUser, ISignInUser, IUser } from './user.interface';
 
 @Injectable()
 export class UserRepo {
@@ -19,9 +19,15 @@ export class UserRepo {
         .first();
     }
   
-    async getUserByEmail(email: string): Promise<IUser> {
+    async getUserByEmail(email: string): Promise<ISignInUser> {
       return this.knex('users')
         .where({ email })
+        .first();
+    }
+  
+    async getUserByUsername(username: string): Promise<IUser> {
+      return this.knex('users')
+        .where({ username })
         .first();
     }
   

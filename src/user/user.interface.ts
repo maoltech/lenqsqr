@@ -11,14 +11,22 @@ export interface IloginUser {
 }
 
 export interface ICreateToken {
-    email: string, 
-    password: string
+    email: string,
+    username: string,
+    id: string
 }
 
 export interface IUser {
-    id: number;
-    email: string;
-    password: string;
-    name: string;
-    username: string;
+    id: string,
+    email: string,
+    name: string,
+    username: string
+}
+
+export interface ISignInUser {
+    id: string,
+    email: string,
+    name: string,
+    password: string,
+    username: string
   }
