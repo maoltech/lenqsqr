@@ -4,12 +4,14 @@ import {bcrypt} from 'bcrypt';
 import { ICreateToken} from '../user/user.interface';
 import { UserRepo } from 'src/user/user.repo';
 import { CreateUserDto, LoginUserDto } from './auth.dto';
+import { WalletService } from 'src/wallet/wallet.service';
 
 @Injectable()
 export class AuthService {
     constructor(
         private readonly jwtService: JwtService,
-        private readonly userRepo: UserRepo
+        private readonly userRepo: UserRepo,
+        private readonly walletService: WalletService
       ) {}
     
     public async signup(payload: CreateUserDto): Promise<any> {
@@ -46,6 +48,8 @@ export class AuthService {
     }
 
     public async completeRegistration(userId: string){
+        const user = await this.userRepo.getUserById(userId)
+        await this.walletService.CreateWallet(user)
         return await this.userRepo.updateUser(userId, {
             isOnboarded: true
         })

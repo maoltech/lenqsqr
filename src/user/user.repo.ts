@@ -13,7 +13,7 @@ export class UserRepo {
       return newUser;
     }
   
-    async getUserById(id: number): Promise<IUser> {
+    async getUserById(id: string): Promise<IUser> {
       return this.knex('users')
         .where({ id })
         .first();
