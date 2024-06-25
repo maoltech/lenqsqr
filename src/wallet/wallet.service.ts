@@ -35,4 +35,12 @@ export class WalletService {
     public GetWalletByEmail = async(email: string): Promise<IWalletReponse> => {
         return await this.walletrepo.GetWalletByEmail(email)
     }
+
+    public CreditWallet = async(userId: string, amount: number): Promise<IWalletReponse> => {
+        return await this.walletrepo.CreditWallet(userId, amount);
+    }
+
+    public DebitWallet = async(userId: string, amount: number): Promise<IWalletReponse> => {
+        return await this.walletrepo.DebitWallet(userId, amount);
+    }
 }

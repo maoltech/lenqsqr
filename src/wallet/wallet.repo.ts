@@ -38,4 +38,26 @@ export class WalletRepo {
         return await this.knex('wallet').select('*')
     }
 
+    public CreditWallet = async(userId: string, amount: number): Promise<IWalletReponse> => {
+        return await this.knex('wallet')
+            .where({ userId })
+            .increment('balance', amount)
+            .increment('totalRecieved', amount)
+            .increment('totalTransaction', 1)
+            .increment('totalCreditTransaction', 1)
+            .returning('*')
+            .then(rows => rows[0]);
+    }
+
+    public DebitWallet = async(userId: string, amount: number): Promise<IWalletReponse> => {
+        return await this.knex('wallet')
+            .where({ userId })
+            .decrement('balance', amount)
+            .increment('totalSpent', amount)
+            .increment('totalTransaction', 1)
+            .increment('totalDebitTransaction', 1)
+            .returning('*')
+            .then(rows => rows[0]);
+    }
+
 }
