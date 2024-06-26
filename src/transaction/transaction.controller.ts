@@ -4,11 +4,15 @@ import { ITransactionResponse } from './transaction.interface';
 import { CreateTransferDto, CreateWithdrawDto, CreateDepositDto } from './transaction.dto';
 import { Request, Response } from 'express';
 import { AuthMiddleware } from 'src/auth/auth.middleware';
+import { FlutterwaveService } from 'src/flutterwave/flutterwave.service';
 
 @Controller('transaction')
 @UseGuards(AuthMiddleware)
 export class TransactionController {
-    constructor(private transactionService: TransactionService) {}
+    constructor(
+        private transactionService: TransactionService, 
+        private flutterWaveService: FlutterwaveService
+    ) {}
 
     @Post('transfer')
     public async transfer(@Req() req: Request, @Res() res: Response ): Promise<Response> {
@@ -22,7 +26,6 @@ export class TransactionController {
         }
          
     }
-
     @Post('withdraw')
     public async withdraw(@Req() req: Request, @Res() res: Response): Promise<Response> {
         
@@ -52,18 +55,33 @@ export class TransactionController {
     }
 
     @Get(':transactionId')
-    public async getTransactionById(@Param('transactionId') transactionId: string): Promise<ITransactionResponse> {
-        
-        return await this.transactionService.getTransactionById(transactionId);
+    public async getTransactionById(@Req() req: Request, @Res() res: Response): Promise<Response> {
+        try {
+            const response = await this.transactionService.getTransactionById(req.params.transactionId);
+            return res.status(HttpStatus.OK).json(response);
+        } catch (error) {
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(error.message);
+        };
     }
 
-    @Get('user/:userId')
-    public async getTransactionsByUserId(@Param('userId') userId: string): Promise<ITransactionResponse[]> {
-        return await this.transactionService.getTransactionsByUserId(userId);
+    @Get('user')
+    public async getTransactionsByUserId(@Req() req: Request, @Res() res: Response): Promise<Response> {
+        const userId = req['user'].id;
+        try {
+            const response = await this.transactionService.getTransactionsByUserId(userId);
+            return res.status(HttpStatus.OK).json(response);
+        } catch (error) {
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(error.message);
+        };
     }
 
     @Get('wallet/:walletId')
-    public async getTransactionsByWalletId(@Param('walletId') walletId: string): Promise<ITransactionResponse[]> {
-        return await this.transactionService.getTransactionsByWalletId(walletId);
+    public async getTransactionsByWalletId(@Req() req: Request, @Res() res: Response): Promise<Response> {
+        try {
+            const response = await this.transactionService.getTransactionsByWalletId(req.params.walletId);
+            return res.status(HttpStatus.OK).json(response);
+        } catch (error) {
+            return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json(error.message);
+        };;
     }
 }
